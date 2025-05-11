@@ -247,22 +247,125 @@ local function createCoordButton(index, pos)
         button.BackgroundColor3 = originalColor
     end)
     
-    -- Add click functionality to teleport
+    -- Add click functionality with teleport/copy choice
     button.MouseButton1Click:Connect(function()
-        -- Visual feedback
-        local originalText = button.Text
-        button.Text = "Teleporting..."
+        -- Store reference to the coordinate button for feedback
+        local coordButton = button
         
-        -- Teleport to saved position
-        local character = player.Character
-        if character and character:FindFirstChild("HumanoidRootPart") then
-            -- Create a CFrame at the target position
-            character:SetPrimaryPartCFrame(CFrame.new(pos))
-        end
+        -- Create popup GUI
+        local popupGui = Instance.new("ScreenGui")
+        popupGui.Name = "CoordinateActionPopup"
+        popupGui.ResetOnSpawn = false
+        popupGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        popupGui.Parent = playerGui
         
-        -- Reset text after delay
-        task.delay(1, function()
-            button.Text = originalText
+        -- Create background frame
+        local popupFrame = Instance.new("Frame")
+        popupFrame.Name = "PopupFrame"
+        popupFrame.Size = UDim2.new(0, 300, 0, 150)
+        popupFrame.Position = UDim2.new(0.5, -150, 0.5, -75)
+        popupFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+        popupFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        popupFrame.BackgroundTransparency = 0.1
+        popupFrame.BorderSizePixel = 0
+        popupFrame.Parent = popupGui
+        
+        -- Add corner radius
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = popupFrame
+        
+        -- Add title
+        local title = Instance.new("TextLabel")
+        title.Name = "Title"
+        title.Size = UDim2.new(1, 0, 0, 30)
+        title.Position = UDim2.new(0, 0, 0, 10)
+        title.BackgroundTransparency = 1
+        title.Text = "Coordinate Action"
+        title.TextColor3 = Color3.fromRGB(255, 255, 255)
+        title.TextSize = 18
+        title.Font = Enum.Font.GothamBold
+        title.Parent = popupFrame
+        
+        -- Add message
+        local message = Instance.new("TextLabel")
+        message.Name = "Message"
+        message.Size = UDim2.new(1, -20, 0, 40)
+        message.Position = UDim2.new(0, 10, 0, 40)
+        message.BackgroundTransparency = 1
+        message.Text = "Choose an action for these coordinates:"
+        message.TextColor3 = Color3.fromRGB(200, 200, 200)
+        message.TextSize = 14
+        message.Font = Enum.Font.Gotham
+        message.TextWrapped = true
+        message.Parent = popupFrame
+        
+        -- Create teleport button
+        local teleportBtn = Instance.new("TextButton")
+        teleportBtn.Name = "TeleportBtn"
+        teleportBtn.Size = UDim2.new(0.4, 0, 0, 30)
+        teleportBtn.Position = UDim2.new(0.1, 0, 0, 90)
+        teleportBtn.BackgroundColor3 = Color3.fromRGB(0, 120, 215)
+        teleportBtn.Text = "Teleport"
+        teleportBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        teleportBtn.TextSize = 14
+        teleportBtn.Font = Enum.Font.GothamSemibold
+        teleportBtn.Parent = popupFrame
+        
+        -- Add corner to button
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, 6)
+        btnCorner.Parent = teleportBtn
+        
+        -- Create copy button
+        local copyBtn = Instance.new("TextButton")
+        copyBtn.Name = "CopyBtn"
+        copyBtn.Size = UDim2.new(0.4, 0, 0, 30)
+        copyBtn.Position = UDim2.new(0.5, 0, 0, 90)
+        copyBtn.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+        copyBtn.Text = "Copy"
+        copyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        copyBtn.TextSize = 14
+        copyBtn.Font = Enum.Font.GothamSemibold
+        copyBtn.Parent = popupFrame
+        
+        -- Add corner to button
+        btnCorner:Clone().Parent = copyBtn
+        
+        -- Teleport button click handler
+        teleportBtn.MouseButton1Click:Connect(function()
+            popupGui:Destroy()
+            
+            -- Visual feedback
+            local originalText = coordButton.Text
+            coordButton.Text = "Teleporting..."
+            
+            -- Teleport to saved position
+            local character = player.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                character:SetPrimaryPartCFrame(CFrame.new(pos))
+            end
+            
+            -- Reset text after delay
+            task.delay(1, function()
+                coordButton.Text = originalText
+            end)
+        end)
+        
+        -- Copy button click handler
+        copyBtn.MouseButton1Click:Connect(function()
+            popupGui:Destroy()
+            
+            -- Copy coordinates to clipboard
+            local coordsText = string.format("x=%.1f, y=%.1f, z=%.1f", pos.X, pos.Y, pos.Z)
+            game:GetService("GuiService"):SetClipboard(coordsText)
+            
+            -- Visual feedback
+            local originalText = coordButton.Text
+            coordButton.Text = "Copied!"
+            task.delay(1, function()
+                coordButton.Text = originalText
+            end)
         end)
     end)
     
