@@ -20,7 +20,7 @@ end
 local mainFrame = Instance.new("Frame")
 mainFrame.Name = "MainFrame"
 mainFrame.Size = UDim2.new(0, 200, 0, 180)
-mainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+mainFrame.Position = UDim2.new(0.8, 0, 0.3, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 mainFrame.BorderSizePixel = 0
 mainFrame.ClipsDescendants = true
@@ -38,7 +38,7 @@ titleBar.Parent = mainFrame
 local title = Instance.new("TextLabel")
 title.Size = UDim2.new(1, -45, 1, 0)
 title.BackgroundTransparency = 1
-title.Position = UDim2.new(0, 10, 0, 0)
+title.Position = UDim2.new(0, 45, 0, 0)
 title.TextColor3 = Color3.fromRGB(255, 255, 255)
 title.Text = "Character Modifier"
 title.TextSize = 16
@@ -49,7 +49,7 @@ title.Parent = titleBar
 -- Expand Button
 local expandButton = Instance.new("TextButton")
 expandButton.Size = UDim2.new(0, 45, 1, 0)
-expandButton.Position = UDim2.new(1, -45, 0, 0)
+expandButton.Position = UDim2.new(0, 0, 0, 0)
 expandButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 expandButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 expandButton.Text = "-"
